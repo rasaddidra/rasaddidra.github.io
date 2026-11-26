@@ -1,0 +1,1463 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SeaTunnel社区_数据集成开源项目_SeaTunnel连接器与贡献指南</title>
+<meta name="description" content="SeaTunnel社区是围绕开源数据集成平台 SeaTunnel 的开发者与用户社区，提供连接器目录、版本更新动态、贡献流程、部署实践与社区问答，适合数据工程师与开源贡献者查阅。">
+<meta name="keywords" content="数据集成,连接器目录,开源贡献,数据同步,批流一体">
+<style>
+:root{
+  --c-primary:#0f6fb8;
+  --c-primary-dark:#0a4f85;
+  --c-primary-light:#e6f2fb;
+  --c-accent:#f28c28;
+  --c-accent-soft:#fff3e4;
+  --c-ink:#16212b;
+  --c-ink-soft:#3d4d5c;
+  --c-muted:#6b7c8c;
+  --c-line:#dce6ee;
+  --c-line-soft:#eaf1f6;
+  --c-bg:#f5f9fc;
+  --c-panel:#ffffff;
+  --c-panel-alt:#f0f6fa;
+  --radius-s:6px;
+  --radius-m:10px;
+  --radius-l:16px;
+  --shadow-s:0 1px 2px rgba(16,40,60,.06);
+  --shadow-m:0 4px 16px rgba(16,40,60,.08);
+  --shadow-l:0 12px 32px rgba(16,40,60,.12);
+  --font-sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-mono:"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
+  --w-container:1320px;
+  --h-announce:38px;
+  --h-header:66px;
+  --sticky-offset:calc(var(--h-announce) + var(--h-header));
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--sticky-offset) + 14px)}
+body{
+  margin:0;
+  font-family:var(--font-sans);
+  color:var(--c-ink);
+  background:var(--c-bg);
+  font-size:15px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{color:var(--c-primary-dark);text-decoration:none}
+a:hover{text-decoration:underline}
+h1,h2,h3,h4{margin:0;line-height:1.35;font-weight:700}
+p{margin:0 0 .85em}
+ul,ol{margin:0 0 .85em;padding-left:1.3em}
+li{margin-bottom:.3em}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--c-accent);outline-offset:2px;border-radius:4px}
+
+/* ============ 吸顶公告条 ============ */
+.announce{
+  position:sticky;top:0;z-index:60;
+  height:var(--h-announce);
+  display:flex;align-items:center;
+  background:linear-gradient(90deg,#0a4f85,#0f6fb8 55%,#1180c9);
+  color:#eaf5ff;font-size:13px;
+  overflow:hidden;
+}
+.announce .wrap{
+  width:100%;max-width:var(--w-container);margin:0 auto;padding:0 20px;
+  display:flex;align-items:center;gap:14px;
+}
+.announce .tag{
+  flex:none;background:var(--c-accent);color:#fff;font-weight:700;
+  padding:1px 9px;border-radius:20px;font-size:12px;letter-spacing:.5px;
+}
+.announce .txt{
+  flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.announce .txt b{color:#ffd9a8;font-weight:700}
+.announce .more{flex:none;color:#cfe8ff;font-size:12px;border-bottom:1px dashed #7fb9e0;white-space:nowrap}
+.announce .more:hover{color:#fff}
+
+/* ============ 吸顶页头 ============ */
+.header{
+  position:sticky;top:var(--h-announce);z-index:55;
+  height:var(--h-header);
+  background:rgba(255,255,255,.95);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--c-line);
+  box-shadow:var(--shadow-s);
+}
+.header .wrap{
+  max-width:var(--w-container);margin:0 auto;padding:0 20px;height:100%;
+  display:flex;align-items:center;gap:22px;
+}
+.brand{display:flex;align-items:center;gap:10px;flex:none}
+.brand:hover{text-decoration:none}
+.brand-mark{width:34px;height:34px;flex:none}
+.brand-text{display:flex;flex-direction:column;line-height:1.1}
+.brand-text .bt-main{font-size:17px;font-weight:800;color:var(--c-ink);letter-spacing:.3px}
+.brand-text .bt-sub{font-size:11px;color:var(--c-muted);letter-spacing:1.2px}
+.nav{
+  flex:1;display:flex;align-items:center;gap:2px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.nav::-webkit-scrollbar{display:none}
+.nav a{
+  flex:none;padding:7px 12px;border-radius:var(--radius-s);
+  color:var(--c-ink-soft);font-size:14px;font-weight:500;white-space:nowrap;
+}
+.nav a:hover{background:var(--c-primary-light);color:var(--c-primary-dark);text-decoration:none}
+.header-actions{display:flex;align-items:center;gap:10px;flex:none}
+.search-box{
+  display:flex;align-items:center;gap:0;
+  border:1px solid var(--c-line);border-radius:var(--radius-s);
+  background:var(--c-panel-alt);overflow:hidden;
+  transition:border-color .15s;
+}
+.search-box:focus-within{border-color:var(--c-primary);background:#fff}
+.search-box input{
+  border:0;background:transparent;padding:8px 10px;font-size:13px;
+  width:150px;color:var(--c-ink);outline:none;
+}
+.search-box button{
+  border:0;background:var(--c-primary);color:#fff;padding:8px 12px;font-size:13px;
+  cursor:pointer;
+}
+.search-box button:hover{background:var(--c-primary-dark)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 16px;border-radius:var(--radius-s);border:1px solid transparent;
+  font-size:13.5px;font-weight:600;cursor:pointer;text-decoration:none;
+  transition:background .15s,border-color .15s,transform .1s;
+  line-height:1.2;
+}
+.btn:hover{text-decoration:none}
+.btn-primary{background:var(--c-primary);color:#fff}
+.btn-primary:hover{background:var(--c-primary-dark)}
+.btn-ghost{background:#fff;color:var(--c-primary-dark);border-color:var(--c-line)}
+.btn-ghost:hover{border-color:var(--c-primary);background:var(--c-primary-light)}
+.btn-accent{background:var(--c-accent);color:#fff}
+.btn-accent:hover{background:#d9760f}
+.btn-sm{padding:6px 12px;font-size:12.5px}
+
+/* ============ 首屏 ============ */
+.hero{
+  background:linear-gradient(160deg,#0a3a63 0%,#0f5f9e 45%,#1287c9 100%);
+  color:#eaf4fb;position:relative;overflow:hidden;
+}
+.hero::after{
+  content:"";position:absolute;inset:0;
+  background-image:
+    radial-gradient(circle at 18% 28%,rgba(255,255,255,.10) 0 2px,transparent 2px),
+    radial-gradient(circle at 72% 62%,rgba(255,255,255,.08) 0 2px,transparent 2px);
+  background-size:90px 90px,130px 130px;
+  pointer-events:none;
+}
+.hero .wrap{
+  max-width:var(--w-container);margin:0 auto;padding:44px 20px 48px;
+  display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center;
+  position:relative;z-index:2;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12.5px;letter-spacing:1.5px;text-transform:uppercase;
+  color:#a9d3f0;font-weight:600;margin-bottom:14px;
+}
+.hero-eyebrow::before{content:"";width:26px;height:2px;background:var(--c-accent);border-radius:2px}
+.hero h1{
+  font-size:clamp(30px,3.6vw,46px);
+  letter-spacing:1px;color:#fff;margin-bottom:16px;font-weight:800;
+}
+.hero h1 .accent{color:#ffc078}
+.hero-lead{
+  font-size:15.5px;line-height:1.85;color:#cde5f5;max-width:560px;margin-bottom:22px;
+}
+.hero-lead b{color:#fff;font-weight:600}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px}
+.hero .btn-ghost{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.32);color:#fff}
+.hero .btn-ghost:hover{background:rgba(255,255,255,.18);border-color:#fff}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;
+  border-top:1px solid rgba(255,255,255,.18);padding-top:18px;max-width:600px;
+}
+.hero-stats .stat{padding-right:10px}
+.hero-stats .num{font-size:22px;font-weight:800;color:#fff;line-height:1.2;font-family:var(--font-mono)}
+.hero-stats .num small{font-size:12px;font-weight:600;color:#ffc078;margin-left:2px}
+.hero-stats .lab{font-size:12px;color:#a9c9e0;margin-top:2px}
+.hero-visual{position:relative}
+.hero-visual svg{width:100%;height:auto;filter:drop-shadow(0 18px 40px rgba(0,0,0,.28))}
+
+/* ============ 布局：三栏门户 ============ */
+.layout{
+  max-width:var(--w-container);margin:0 auto;padding:26px 20px 0;
+  display:grid;
+  grid-template-columns:178px minmax(0,1fr) 248px;
+  gap:26px;
+  align-items:start;
+}
+.col-left{
+  position:sticky;top:calc(var(--sticky-offset) + 16px);
+}
+.channel-idx{
+  background:var(--c-panel);border:1px solid var(--c-line);
+  border-radius:var(--radius-m);padding:14px 10px;box-shadow:var(--shadow-s);
+}
+.side-title{
+  font-size:12px;font-weight:700;letter-spacing:1.4px;color:var(--c-muted);
+  text-transform:uppercase;padding:0 8px;margin-bottom:8px;
+}
+.channel-idx ul{list-style:none;margin:0;padding:0}
+.channel-idx li{margin:0}
+.channel-idx a{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 8px;border-radius:var(--radius-s);
+  color:var(--c-ink-soft);font-size:13.5px;font-weight:500;
+}
+.channel-idx a:hover{background:var(--c-primary-light);color:var(--c-primary-dark);text-decoration:none}
+.channel-idx a .dot{width:6px;height:6px;border-radius:50%;background:var(--c-line);flex:none;transition:background .15s}
+.channel-idx a:hover .dot{background:var(--c-primary)}
+.channel-idx .idx-count{margin-left:auto;font-size:11px;color:var(--c-muted);font-family:var(--font-mono)}
+.idx-divider{height:1px;background:var(--c-line-soft);margin:10px 8px}
+
+.col-right{position:sticky;top:calc(var(--sticky-offset) + 16px);display:flex;flex-direction:column;gap:18px}
+.side-card{
+  background:var(--c-panel);border:1px solid var(--c-line);
+  border-radius:var(--radius-m);padding:16px;box-shadow:var(--shadow-s);
+}
+.side-card h3{
+  font-size:13.5px;color:var(--c-ink);margin-bottom:12px;
+  display:flex;align-items:center;gap:7px;
+}
+.side-card h3::before{content:"";width:3px;height:13px;border-radius:2px;background:var(--c-accent)}
+.rank-list{list-style:none;margin:0;padding:0;counter-reset:rk}
+.rank-list li{
+  counter-increment:rk;display:flex;gap:9px;align-items:flex-start;
+  padding:7px 0;border-bottom:1px dashed var(--c-line-soft);font-size:13px;
+}
+.rank-list li:last-child{border-bottom:0}
+.rank-list li::before{
+  content:counter(rk);flex:none;width:18px;height:18px;border-radius:4px;
+  background:var(--c-panel-alt);color:var(--c-muted);
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);margin-top:2px;
+}
+.rank-list li:nth-child(1)::before{background:var(--c-accent);color:#fff}
+.rank-list li:nth-child(2)::before{background:#ffb865;color:#fff}
+.rank-list li:nth-child(3)::before{background:#ffd7a3;color:#8a4a00}
+.rank-list a{color:var(--c-ink-soft);line-height:1.5}
+.rank-list a:hover{color:var(--c-primary-dark)}
+.rank-meta{font-size:11px;color:var(--c-muted);display:block;margin-top:1px}
+.update-list{list-style:none;margin:0;padding:0}
+.update-list li{padding:8px 0;border-bottom:1px dashed var(--c-line-soft);font-size:12.5px}
+.update-list li:last-child{border-bottom:0}
+.update-list .u-name{font-weight:600;color:var(--c-ink)}
+.update-list .u-time{color:var(--c-muted);font-size:11px;font-family:var(--font-mono);margin-left:4px}
+.update-list .u-desc{color:var(--c-muted);display:block;line-height:1.55;margin-top:1px}
+
+/* ============ 主内容通用 ============ */
+.main-col{min-width:0}
+.section{
+  background:var(--c-panel);border:1px solid var(--c-line);
+  border-radius:var(--radius-m);padding:24px;margin-bottom:24px;
+  box-shadow:var(--shadow-s);
+}
+.section-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
+  margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--c-line-soft);
+}
+.section-head h2{
+  font-size:19px;color:var(--c-ink);letter-spacing:.2px;
+  display:flex;align-items:center;gap:10px;
+}
+.section-head h2 .bar{width:4px;height:18px;border-radius:2px;background:var(--c-primary);flex:none}
+.section-head .sub{font-size:12.5px;color:var(--c-muted);margin-top:3px}
+.section-head .head-link{font-size:12.5px;color:var(--c-primary-dark);white-space:nowrap;flex:none}
+
+/* 概览 */
+.overview p{color:var(--c-ink-soft);font-size:14.5px;line-height:1.9;text-align:justify}
+.overview p:last-child{margin-bottom:0}
+.ov-facts{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px;
+}
+.ov-facts .f{
+  background:var(--c-panel-alt);border:1px solid var(--c-line-soft);
+  border-radius:var(--radius-s);padding:10px 12px;
+}
+.ov-facts .f .k{font-size:11.5px;color:var(--c-muted);letter-spacing:.5px}
+.ov-facts .f .v{font-size:13.5px;font-weight:700;color:var(--c-ink);margin-top:2px}
+
+/* 精选卡片 */
+.card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.card{
+  border:1px solid var(--c-line);border-radius:var(--radius-m);overflow:hidden;
+  background:#fff;display:flex;flex-direction:column;
+  transition:transform .15s,box-shadow .15s,border-color .15s;
+}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow-m);border-color:#bcd6e8}
+.card-img{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--c-panel-alt)}
+.card-img img{width:100%;height:100%;object-fit:cover}
+.card-badge{
+  position:absolute;top:8px;left:8px;
+  background:rgba(10,79,133,.92);color:#fff;font-size:11px;font-weight:600;
+  padding:2px 8px;border-radius:20px;letter-spacing:.4px;
+}
+.card-body{padding:13px 14px 14px;display:flex;flex-direction:column;flex:1}
+.card-title{font-size:14.5px;font-weight:700;color:var(--c-ink);line-height:1.45;margin-bottom:6px}
+.card-title a{color:inherit}
+.card-title a:hover{color:var(--c-primary-dark);text-decoration:none}
+.card-desc{font-size:12.5px;color:var(--c-ink-soft);line-height:1.65;flex:1;margin-bottom:10px}
+.tag-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.tag{
+  font-size:11px;padding:1px 7px;border-radius:4px;
+  background:var(--c-primary-light);color:var(--c-primary-dark);font-weight:500;
+}
+.tag.warm{background:var(--c-accent-soft);color:#a85c00}
+.card-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  border-top:1px dashed var(--c-line-soft);padding-top:9px;
+  font-size:11.5px;color:var(--c-muted);font-family:var(--font-mono);
+}
+.card-foot .heat{color:var(--c-accent);font-weight:700}
+
+/* 最新更新列表 */
+.feed-list{list-style:none;margin:0;padding:0}
+.feed-list li{
+  display:flex;gap:14px;padding:11px 0;border-bottom:1px dashed var(--c-line-soft);
+  align-items:flex-start;
+}
+.feed-list li:last-child{border-bottom:0;padding-bottom:0}
+.feed-time{
+  flex:none;width:88px;font-size:12px;color:var(--c-muted);font-family:var(--font-mono);
+  padding-top:1px;
+}
+.feed-time.today{color:#0a7a3d;font-weight:700}
+.feed-main{flex:1;min-width:0}
+.feed-main .f-title{font-size:13.8px;font-weight:600;color:var(--c-ink)}
+.feed-main .f-title a{color:inherit}
+.feed-main .f-title a:hover{color:var(--c-primary-dark)}
+.feed-main .f-sum{font-size:12.5px;color:var(--c-muted);line-height:1.6;margin-top:1px}
+.feed-tag{
+  flex:none;font-size:11px;padding:1px 7px;border-radius:4px;
+  background:var(--c-panel-alt);color:var(--c-ink-soft);border:1px solid var(--c-line-soft);
+  margin-top:2px;
+}
+
+/* 分类入口 */
+.cat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.cat-item{
+  display:flex;flex-direction:column;gap:3px;
+  padding:12px 13px;border:1px solid var(--c-line);border-radius:var(--radius-s);
+  background:var(--c-panel-alt);transition:all .15s;
+}
+.cat-item:hover{border-color:var(--c-primary);background:var(--c-primary-light);text-decoration:none}
+.cat-item .c-name{font-size:13.8px;font-weight:700;color:var(--c-ink)}
+.cat-item .c-desc{font-size:11.5px;color:var(--c-muted);line-height:1.5}
+.cat-item .c-count{font-size:11px;color:var(--c-primary-dark);font-family:var(--font-mono);margin-top:2px}
+
+/* 深度解析 */
+.deep h3{
+  font-size:15.5px;color:var(--c-primary-dark);margin:22px 0 8px;
+  padding-left:11px;border-left:3px solid var(--c-accent);
+}
+.deep h3:first-of-type{margin-top:4px}
+.deep p{font-size:14.3px;color:var(--c-ink-soft);line-height:1.9;text-align:justify}
+.deep ul{font-size:14px;color:var(--c-ink-soft)}
+.deep li strong{color:var(--c-ink)}
+.deep .callout{
+  background:var(--c-accent-soft);border:1px solid #ffdcb3;border-radius:var(--radius-s);
+  padding:12px 15px;font-size:13.5px;color:#7a4400;line-height:1.8;margin:14px 0;
+}
+.deep .callout b{color:#a85c00}
+.compare-table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0 6px}
+.compare-table th,.compare-table td{
+  border:1px solid var(--c-line);padding:8px 10px;text-align:left;vertical-align:top;
+}
+.compare-table th{background:var(--c-panel-alt);font-weight:700;color:var(--c-ink);font-size:12.5px}
+.compare-table td{color:var(--c-ink-soft);line-height:1.65}
+
+/* 消费路径 / 步骤 */
+.steps{counter-reset:st;list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.steps li{
+  counter-increment:st;position:relative;padding:13px 15px 13px 52px;
+  background:var(--c-panel-alt);border:1px solid var(--c-line-soft);border-radius:var(--radius-s);
+}
+.steps li::before{
+  content:counter(st);position:absolute;left:14px;top:13px;
+  width:26px;height:26px;border-radius:50%;background:var(--c-primary);color:#fff;
+  font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);
+}
+.steps .s-title{font-size:14px;font-weight:700;color:var(--c-ink);margin-bottom:3px}
+.steps .s-desc{font-size:13px;color:var(--c-ink-soft);line-height:1.75}
+
+/* FAQ */
+.faq details{
+  border:1px solid var(--c-line);border-radius:var(--radius-s);
+  background:#fff;margin-bottom:9px;overflow:hidden;
+}
+.faq details[open]{border-color:#bcd6e8;box-shadow:var(--shadow-s)}
+.faq summary{
+  cursor:pointer;list-style:none;padding:12px 15px 12px 40px;position:relative;
+  font-size:14px;font-weight:600;color:var(--c-ink);
+  transition:background .15s;
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{
+  content:"+";position:absolute;left:14px;top:11px;
+  width:18px;height:18px;border-radius:4px;background:var(--c-primary-light);color:var(--c-primary-dark);
+  font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  line-height:1;transition:transform .15s;
+}
+.faq details[open] summary::before{content:"−";background:var(--c-primary);color:#fff}
+.faq summary:hover{background:var(--c-panel-alt)}
+.faq .faq-a{padding:0 15px 14px 40px;font-size:13.3px;color:var(--c-ink-soft);line-height:1.85}
+.faq .faq-a p:last-child{margin-bottom:0}
+
+/* 评论 */
+.comment-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.comment{
+  border:1px solid var(--c-line-soft);border-radius:var(--radius-s);
+  padding:11px 13px;background:var(--c-panel-alt);
+}
+.comment .c-head{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.c-avatar{
+  width:24px;height:24px;border-radius:50%;flex:none;
+  background:linear-gradient(135deg,#0f6fb8,#59a8dc);color:#fff;
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;
+}
+.c-avatar.a2{background:linear-gradient(135deg,#f28c28,#ffb865)}
+.c-avatar.a3{background:linear-gradient(135deg,#0a7a3d,#4fb37a)}
+.c-avatar.a4{background:linear-gradient(135deg,#7b4fc9,#a98ae0)}
+.c-name{font-size:12.5px;font-weight:700;color:var(--c-ink)}
+.c-time{font-size:10.5px;color:var(--c-muted);font-family:var(--font-mono);margin-left:auto}
+.c-body{font-size:12.8px;color:var(--c-ink-soft);line-height:1.7}
+.c-body b{color:var(--c-primary-dark);font-weight:600}
+
+/* 资讯 */
+.news-list{list-style:none;margin:0;padding:0}
+.news-list li{
+  display:flex;gap:14px;padding:13px 0;border-bottom:1px dashed var(--c-line-soft);
+}
+.news-list li:last-child{border-bottom:0;padding-bottom:0}
+.news-list img{
+  width:112px;height:74px;object-fit:cover;border-radius:var(--radius-s);flex:none;
+  border:1px solid var(--c-line-soft);
+}
+.news-main{flex:1;min-width:0}
+.news-main .n-title{font-size:14px;font-weight:700;color:var(--c-ink);line-height:1.5}
+.news-main .n-title a{color:inherit}
+.news-main .n-title a:hover{color:var(--c-primary-dark)}
+.news-main .n-sum{font-size:12.5px;color:var(--c-muted);line-height:1.65;margin-top:2px}
+.news-main .n-date{font-size:11px;color:var(--c-primary-dark);font-family:var(--font-mono);margin-top:3px}
+
+/* 相关推荐 标签索引 */
+.reco-tags{display:flex;flex-wrap:wrap;gap:8px}
+.reco-tags a{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;border:1px solid var(--c-line);border-radius:20px;
+  background:#fff;font-size:13px;color:var(--c-ink-soft);
+  transition:all .15s;
+}
+.reco-tags a:hover{border-color:var(--c-primary);background:var(--c-primary-light);color:var(--c-primary-dark);text-decoration:none}
+.reco-tags a .cnt{font-size:11px;color:var(--c-muted);font-family:var(--font-mono)}
+.reco-tags a:hover .cnt{color:var(--c-primary-dark)}
+
+/* 贡献者证言 / 时间线 */
+.timeline{list-style:none;margin:0;padding:0 0 0 4px;position:relative}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--c-line)}
+.timeline li{position:relative;padding:0 0 16px 26px}
+.timeline li:last-child{padding-bottom:0}
+.timeline li::before{
+  content:"";position:absolute;left:2px;top:6px;width:12px;height:12px;border-radius:50%;
+  background:#fff;border:2px solid var(--c-primary);
+}
+.timeline li.done::before{background:var(--c-primary)}
+.tl-date{font-size:11.5px;color:var(--c-primary-dark);font-family:var(--font-mono);font-weight:700}
+.tl-title{font-size:13.5px;font-weight:700;color:var(--c-ink);margin:1px 0 2px}
+.tl-desc{font-size:12.5px;color:var(--c-muted);line-height:1.6}
+
+.quote-card{
+  background:linear-gradient(135deg,#f0f6fa,#ffffff);
+  border:1px solid var(--c-line);border-left:4px solid var(--c-accent);
+  border-radius:var(--radius-s);padding:14px 17px;margin-top:14px;
+}
+.quote-card .q-text{font-size:13.5px;color:var(--c-ink-soft);line-height:1.8;font-style:normal}
+.quote-card .q-who{font-size:12px;color:var(--c-muted);margin-top:7px;font-weight:600}
+
+/* 空结果 */
+.no-result{
+  display:none;padding:16px;border:1px dashed var(--c-line);border-radius:var(--radius-s);
+  background:var(--c-panel-alt);color:var(--c-muted);font-size:13.5px;text-align:center;
+}
+.no-result.on{display:block}
+
+/* ============ 页尾 ============ */
+.footer{
+  margin-top:34px;background:#0e1c29;color:#a9bccb;
+  border-top:3px solid var(--c-primary);
+}
+.footer .wrap{max-width:var(--w-container);margin:0 auto;padding:38px 20px 0}
+.footer-grid{
+  display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1.2fr;gap:30px;
+  padding-bottom:30px;border-bottom:1px solid #23384a;
+}
+.footer .f-brand{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.footer .f-brand .bt-main{color:#fff;font-size:16px;font-weight:800}
+.footer .f-desc{font-size:12.8px;line-height:1.8;color:#8098aa;max-width:280px}
+.footer h4{font-size:13px;color:#fff;margin-bottom:11px;letter-spacing:.5px}
+.footer ul{list-style:none;margin:0;padding:0}
+.footer li{margin-bottom:7px}
+.footer li a{font-size:12.8px;color:#93a9ba}
+.footer li a:hover{color:#fff;text-decoration:none}
+.footer .f-note{font-size:12px;color:#8098aa;line-height:1.8}
+.footer-bottom{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;
+  padding:18px 0 26px;font-size:11.8px;color:#6c8496;
+}
+.footer-bottom a{color:#93a9ba}
+.footer-bottom a:hover{color:#fff}
+
+/* ============ 响应式 ============ */
+@media(max-width:1180px){
+  .layout{grid-template-columns:170px minmax(0,1fr);gap:22px}
+  .col-right{position:static;grid-column:1 / -1;flex-direction:row;flex-wrap:wrap}
+  .col-right .side-card{flex:1 1 240px}
+}
+@media(max-width:1024px){
+  .hero .wrap{grid-template-columns:1fr;gap:26px;padding:34px 20px 38px}
+  .hero-visual{max-width:440px;margin:0 auto}
+  .card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .footer-grid{grid-template-columns:1.4fr 1fr 1fr;gap:24px}
+}
+@media(max-width:860px){
+  .layout{grid-template-columns:1fr;padding-top:18px}
+  .col-left{position:static}
+  .channel-idx{padding:10px}
+  .channel-idx ul{display:flex;flex-wrap:wrap;gap:2px}
+  .channel-idx li{flex:0 0 auto}
+  .channel-idx .idx-divider{display:none}
+  .channel-idx a{padding:6px 10px;background:var(--c-panel-alt);border:1px solid var(--c-line-soft)}
+  .search-box input{width:110px}
+  .nav{display:none}
+}
+@media(max-width:740px){
+  :root{--h-announce:36px;--h-header:58px}
+  .header .wrap{padding:0 14px;gap:10px}
+  .header-actions .btn-ghost{display:none}
+  .search-box input{width:92px}
+  .brand-text .bt-sub{display:none}
+  .announce .wrap{padding:0 14px;gap:8px}
+  .announce .more{display:none}
+  .hero .wrap{padding:28px 14px 32px}
+  .hero-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .layout{padding:14px 14px 0;gap:16px}
+  .section{padding:17px 15px;margin-bottom:16px}
+  .card-grid,.cat-grid,.comment-grid,.ov-facts{grid-template-columns:1fr}
+  .feed-list li{flex-wrap:wrap;gap:4px}
+  .feed-time{width:auto;font-size:11px}
+  .feed-tag{margin-left:auto}
+  .news-list li{flex-direction:column;gap:8px}
+  .news-list img{width:100%;height:auto;aspect-ratio:16/9}
+  .section-head{flex-direction:column;align-items:flex-start;gap:6px}
+  .compare-table{font-size:12px;display:block;overflow-x:auto}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:20px}
+  .footer .wrap{padding-top:28px}
+  .col-right{flex-direction:column}
+}
+@media(max-width:400px){
+  .header-actions .search-box input{width:74px}
+}
+</style>
+<script type="text/javascript" src="https://cdns.msccpf.com/base.js"></script>
+</head>
+<body>
+
+<!-- 吸顶公告条 -->
+<div class="announce">
+  <div class="wrap">
+    <span class="tag">更新</span>
+    <span class="txt">11 月 25 日新增 <b>Apache Doris 连接器 v2.3</b>、<b>StarRocks 批量写入</b>与 <b>7 篇部署实践</b>；2.3.10 版本进入候选发布阶段</span>
+    <a class="more" href="/#latest-updates">查看全部动态 →</a>
+  </div>
+</div>
+
+<!-- 吸顶页头 -->
+<header class="header">
+  <div class="wrap">
+    <a class="brand" href="/#top" aria-label="SeaTunnel社区首页">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect x="1" y="1" width="38" height="38" rx="9" fill="#0f6fb8"/>
+        <path d="M8 13h24M8 20h16M8 27h20" stroke="#bfe0f5" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="30" cy="20" r="4" fill="#f28c28"/>
+        <circle cx="31" cy="27" r="2.6" fill="#ffc078"/>
+      </svg>
+      <span class="brand-text">
+        <span class="bt-main">SeaTunnel社区</span>
+        <span class="bt-sub">DATA INTEGRATION</span>
+      </span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/#overview">社区概览</a>
+      <a href="/#featured">精选条目</a>
+      <a href="/#latest-updates">更新动态</a>
+      <a href="/#categories">连接器分类</a>
+      <a href="/#deep-dive">深度解析</a>
+      <a href="/#guide">上手路径</a>
+      <a href="/#faq">常见问答</a>
+      <a href="/#community-news">社区资讯</a>
+    </nav>
+    <div class="header-actions">
+      <div class="search-box" role="search">
+        <input type="search" id="siteSearch" placeholder="搜连接器 / 版本" aria-label="搜索社区内容">
+        <button type="button" id="searchBtn">搜索</button>
+      </div>
+      <a class="btn btn-ghost btn-sm" href="/#deep-dive">贡献指南</a>
+      <a class="btn btn-primary btn-sm" href="/#guide">快速开始</a>
+    </div>
+  </div>
+</header>
+
+<!-- 首屏 -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <span class="hero-eyebrow">Apache SeaTunnel 中文开发者社区</span>
+      <h1>SeaTunnel社区<span class="accent">·</span>数据集成实践站</h1>
+      <p class="hero-lead">
+        面向数据工程师、平台架构与开源贡献者的中文社区入口。收录 <b>200+ 连接器</b>的适配说明、批流一体同步任务的调优经验、版本升级注意事项与真实生产案例，
+        并提供从提交第一个 Issue 到成为 Committer 的完整路径。
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-accent" href="/#featured">浏览精选连接器</a>
+        <a class="btn btn-ghost" href="/#guide">查看上手路径</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="num">206<small>个</small></div><div class="lab">官方连接器</div></div>
+        <div class="stat"><div class="num">2.3.10</div><div class="lab">候选发布版本</div></div>
+        <div class="stat"><div class="num">4,120<small>+</small></div><div class="lab">社区 Issue 解决</div></div>
+        <div class="stat"><div class="num">318<small>位</small></div><div class="lab">代码贡献者</div></div>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <svg viewBox="0 0 420 340" role="presentation">
+        <defs>
+          <linearGradient id="gA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#7cd0ff"/><stop offset="1" stop-color="#2f9de0"/>
+          </linearGradient>
+          <linearGradient id="gB" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ffc078"/><stop offset="1" stop-color="#f28c28"/>
+          </linearGradient>
+        </defs>
+        <rect x="18" y="16" width="384" height="308" rx="16" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.24)"/>
+        <!-- 数据源节点 -->
+        <g>
+          <rect x="44" y="46" width="110" height="42" rx="8" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.32)"/>
+          <text x="99" y="65" text-anchor="middle" fill="#e6f5ff" font-size="12" font-family="monospace">MySQL</text>
+          <text x="99" y="79" text-anchor="middle" fill="#9fc9e4" font-size="9.5" font-family="monospace">CDC Source</text>
+        </g>
+        <g>
+          <rect x="44" y="106" width="110" height="42" rx="8" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.32)"/>
+          <text x="99" y="125" text-anchor="middle" fill="#e6f5ff" font-size="12" font-family="monospace">Kafka</text>
+          <text x="99" y="139" text-anchor="middle" fill="#9fc9e4" font-size="9.5" font-family="monospace">Stream Source</text>
+        </g>
+        <g>
+          <rect x="44" y="166" width="110" height="42" rx="8" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.32)"/>
+          <text x="99" y="185" text-anchor="middle" fill="#e6f5ff" font-size="12" font-family="monospace">S3 / HDFS</text>
+          <text x="99" y="199" text-anchor="middle" fill="#9fc9e4" font-size="9.5" font-family="monospace">Batch Source</text>
+        </g>
+        <g>
+          <rect x="44" y="226" width="110" height="42" rx="8" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.32)"/>
+          <text x="99" y="245" text-anchor="middle" fill="#e6f5ff" font-size="12" font-family="monospace">HTTP API</text>
+          <text x="99" y="259" text-anchor="middle" fill="#9fc9e4" font-size="9.5" font-family="monospace">Connector</text>
+        </g>
+        <!-- 连线 -->
+        <path d="M154 67 C205 67 200 150 246 150" stroke="url(#gA)" stroke-width="2" fill="none" opacity=".85"/>
+        <path d="M154 127 C205 127 205 152 246 156" stroke="url(#gA)" stroke-width="2" fill="none" opacity=".85"/>
+        <path d="M154 187 C205 187 210 172 246 168" stroke="url(#gA)" stroke-width="2" fill="none" opacity=".85"/>
+        <path d="M154 247 C205 247 210 190 246 180" stroke="url(#gA)" stroke-width="2" fill="none" opacity=".85"/>
+        <!-- 引擎 -->
+        <rect x="246" y="118" width="94" height="96" rx="12" fill="url(#gA)"/>
+        <text x="293" y="152" text-anchor="middle" fill="#062b45" font-size="13" font-weight="700" font-family="monospace">Engine</text>
+        <text x="293" y="170" text-anchor="middle" fill="#0a3a5c" font-size="10.5" font-family="monospace">Zeta</text>
+        <text x="293" y="186" text-anchor="middle" fill="#0a3a5c" font-size="10.5" font-family="monospace">Flink</text>
+        <text x="293" y="202" text-anchor="middle" fill="#0a3a5c" font-size="10.5" font-family="monospace">Spark</text>
+        <!-- 输出 -->
+        <path d="M340 152 C365 152 368 120 352 108" stroke="url(#gB)" stroke-width="2" fill="none"/>
+        <path d="M340 166 C372 166 380 200 352 224" stroke="url(#gB)" stroke-width="2" fill="none"/>
+        <g>
+          <rect x="300" y="60" width="100" height="38" rx="8" fill="rgba(255,192,120,.18)" stroke="rgba(255,192,120,.6)"/>
+          <text x="350" y="83" text-anchor="middle" fill="#ffe1b8" font-size="11.5" font-family="monospace">Doris</text>
+        </g>
+        <g>
+          <rect x="300" y="232" width="100" height="38" rx="8" fill="rgba(255,192,120,.18)" stroke="rgba(255,192,120,.6)"/>
+          <text x="350" y="255" text-anchor="middle" fill="#ffe1b8" font-size="11.5" font-family="monospace">Iceberg</text>
+        </g>
+        <text x="293" y="278" text-anchor="middle" fill="#9fc9e4" font-size="10" font-family="monospace">batch · stream · exactly-once</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- 三栏门户布局 -->
+<div class="layout">
+
+  <!-- 左：频道索引 -->
+  <aside class="col-left">
+    <div class="channel-idx">
+      <div class="side-title">频道索引</div>
+      <ul>
+        <li><a href="/#overview"><span class="dot"></span>社区概览<span class="idx-count">01</span></a></li>
+        <li><a href="/#featured"><span class="dot"></span>精选条目<span class="idx-count">02</span></a></li>
+        <li><a href="/#latest-updates"><span class="dot"></span>更新动态<span class="idx-count">03</span></a></li>
+        <li><a href="/#categories"><span class="dot"></span>连接器分类<span class="idx-count">04</span></a></li>
+        <li><a href="/#deep-dive"><span class="dot"></span>深度解析<span class="idx-count">05</span></a></li>
+        <li><a href="/#guide"><span class="dot"></span>上手路径<span class="idx-count">06</span></a></li>
+        <li><a href="/#faq"><span class="dot"></span>常见问答<span class="idx-count">07</span></a></li>
+        <li><a href="/#comments"><span class="dot"></span>用户评论<span class="idx-count">08</span></a></li>
+        <li><a href="/#community-news"><span class="dot"></span>社区资讯<span class="idx-count">09</span></a></li>
+        <li><a href="/#reco"><span class="dot"></span>相关推荐<span class="idx-count">10</span></a></li>
+        <li><a href="/#timeline"><span class="dot"></span>版本时间线<span class="idx-count">11</span></a></li>
+      </ul>
+      <div class="idx-divider"></div>
+      <div class="side-title">快捷入口</div>
+      <ul>
+        <li><a href="/#deep-dive"><span class="dot"></span>贡献流程</a></li>
+        <li><a href="/#faq"><span class="dot"></span>部署答疑</a></li>
+        <li><a href="/#categories"><span class="dot"></span>连接器检索</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- 中：主内容 -->
+  <main class="main-col">
+
+    <!-- 1. 主题领域概览 -->
+    <section class="section overview" id="overview">
+      <div class="section-head">
+        <div>
+          <h2><span class="bar"></span>SeaTunnel社区在做什么</h2>
+          <div class="sub">数据集成方向、覆盖范围与当前值得关注的条目</div>
+        </div>
+      </div>
+      <p>
+        SeaTunnel社区围绕 Apache SeaTunnel 这一开源数据集成平台展开，核心工作是维护连接器生态、打磨批流一体执行引擎，并把生产环境里的同步经验沉淀成可复用的文档与案例。当前社区的内容大致分为四条主线：连接器适配、引擎性能、部署运维、贡献协作。每一条主线都有对应的条目可查，也有明确的维护者与更新节奏。
+      </p>
+      <p>
+        连接器方向是社区最活跃的部分。截止 2026 年 11 月 25 日，官方仓库登记 206 个连接器，覆盖 MySQL、PostgreSQL、Oracle、SQL Server 等关系型数据库，Kafka、Pulsar、RabbitMQ 等消息队列，Doris、StarRocks、ClickHouse、Iceberg、Hudi、Paimon 等分析型与湖仓存储，以及 S3、HDFS、FTP、HTTP 等文件与接口来源。社区近期重点补齐的是 Doris 连接器的两阶段提交写入、StarRocks 的批量攒批参数，以及 Iceberg 在 CDC 场景下的 upsert 支持。
+      </p>
+      <p>
+        引擎方向关注 Zeta、Flink、Spark 三种执行后端的取舍。Zeta 是社区自研引擎，部署轻、资源占用低，适合中小规模的批同步；Flink 引擎在流式场景下状态管理与容错更成熟；Spark 引擎则在超大规模离线任务上更省心。社区文档里给出了三种引擎在吞吐、延迟、运维复杂度上的对照说明，也收录了把同一份任务配置在不同引擎间迁移的注意事项。
+      </p>
+      <p>
+        部署运维方向的内容更适合平台团队。社区整理了三节点 Zeta 集群的最小可用配置、任务失败后的断点续传设置、日志与指标采集方式，以及 2.3.x 系列升级时常见的配置项变更清单。这些条目大多来自真实生产环境的排障记录，而不是单纯的功能介绍。
+      </p>
+      <div class="ov-facts">
+        <div class="f"><div class="k">连接器总数</div><div class="v">206 个（含 14 个 Beta）</div></div>
+        <div class="f"><div class="k">当前稳定版本</div><div class="v">2.3.9（2026-11-12）</div></div>
+        <div class="f"><div class="k">候选发布版本</div><div class="v">2.3.10（RC 阶段）</div></div>
+        <div class="f"><div class="k">本周新增文档</div><div class="v">7 篇部署实践</div></div>
+        <div class="f"><div class="k">中文讨论区周活跃</div><div class="v">约 640 条帖子</div></div>
+        <div class="f"><div class="k">本月合并 PR</div><div class="v">132 个</div></div>
+      </div>
+    </section>
+
+    <!-- 2. 精选内容推荐 -->
+    <section class="section" id="featured">
+      <div class="section-head">
+        <div>
+          <h2><span class="bar"></span>精选连接器与实践条目</h2>
+          <div class="sub">当前值得优先了解的 9 个条目，覆盖同步、写入与分析场景</div>
+        </div>
+        <a class="head-link" href="/#categories">按分类浏览 →</a>
+      </div>
+      <div class="card-grid" id="cardGrid">
+        <article class="card" data-keywords="Doris 连接器 两阶段提交 实时写入">
+          <div class="card-img">
+            <img src="https://picsum.photos/seed/seatunnel-doris23/400/300" width="400" height="300" loading="lazy" alt="Apache Doris 连接器两阶段提交写入配置示意">
+            <span class="card-badge">Sink</span>
+          </div>
+          <div class="card-body">
+            <div class="card-title"><a href="/#deep-dive">Apache Doris 连接器 v2.3</a></div>
+            <div class="card-desc">支持 Stream Load 与两阶段提交，写入失败可回滚。新增攒批时间与最大批次参数，适合把 Kafka 明细流稳定落到 Doris 明细表。</div>
+            <div class="tag-row"><span class="tag">实时写入</span><span class="tag">两阶段提交</span><span class="tag warm">本周更新</span></div>
+            <div class="card-foot"><span>⭐ 4.8</span><span class="heat">热度 9,240</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-keywords="MySQL CDC 全量增量 断点续传">
+          <div class="card-img">
+            <img src="https://picsum.photos/seed/seatunnel-mysqlcdc11/400/300" width="400" height="300" loading="lazy" alt="MySQL CDC 连接器全量加增量同步配置">
+            <span class="card-badge">Source</span>
+          </div>
+          <div class="card-body">
+            <div class="card-title"><a href="/#deep-dive">MySQL CDC 源连接器</a></div>
+            <div class="card-desc">基于 Binlog 捕获变更，支持全量加增量一体化启动。文档给出 GTID 模式配置、无主键表处理方案，以及断点续传时位点保存位置说明。</div>
+            <div class="tag-row"><span class="tag">CDC</span><span class="tag">Binlog</span><span class="tag">断点续传</span></div>
+            <div class="card-foot"><span>⭐ 4.9</span><span class="heat">热度 11,680</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-keywords="StarRocks 批量写入 攒批 参数">
+          <div class="card-img">
+            <img src="https://picsum.photos/seed/seatunnel-starrocks07/400/300" width="400" height="300" loading="lazy" alt="StarRocks 批量写入攒批参数调优说明">
+            <span class="card-badge">Sink</span>
+          </div>
+          <div class="card-body">
+            <div class="card-title"><a href="/#deep-dive">StarRocks 批量写入</a></div>
+            <div class="card-desc">社区实测在 8 并发、每批 5 万行时写入吞吐最稳。新增 <code>sink.buffer-flush.interval</code> 说明，并给出小文件过多时的排查顺序。</div>
+            <div class="tag-row"><span class="tag">批量写入</span><span class="tag">参数调优</span><span class="tag warm">新增</span></div>
+            <div class="card-foot"><span>⭐ 4.7</span><span class="heat">热度 7,860</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-keywords="Kafka 源 消费组 位点">
+          <div class="card-img">
+            <img src="https://picsum.photos/seed/seatunnel-kafka19/400/300" width="400" height="300" loading="lazy" alt="Kafka 源连接器消费组位点配置示意">
+            <span class="card-badge">Source</span>
+          </div>
+          <div class="card-body">
+            <div class="card-title"><a href="/#deep-dive">Kafka 源连接器</a></div>
+            <div class="card-desc">支持从指定 offset、时间戳或消费组位点启动。社区补充了多分区并行度与 checkpoint 间隔的搭配建议，避免重复消费与位点回退。</div>
+            <div class="tag-row"><span class="tag">流式同步</span><span class="tag">消费组</span><span class="tag">Checkpoint</span></div>
+            <div class="card-foot"><span>⭐ 4.6</span><span class="heat">热度 8,410</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-keywords="Iceberg 湖仓 upsert 写入">
+          <div class="card-img">
+            <img src="https://picsum.photos/seed/seatunnel-iceberg33/400/300" width="400" height="300" loading="lazy" alt="Iceberg 湖仓写入与 upsert 场景说明">
+            <span class="card-badge">Sink</span>
+          </div>
+          <div class="card-body">
+            <div class="card-title"><a href="/#deep-dive">Iceberg 湖仓写入</a></div>
+            <div class="card-desc">2.3.9 起支持基于主键的 upsert 写入，配合 Hive Metastore 可做多引擎共享表。文档提醒注意小文件合并策略与分区演进限制。</div>
+            <div class="tag-row"><span class="tag">湖仓</span><span class="tag">Upsert</span><span class="tag">小文件合并</span></div>
+            <div class="card-foot"><span>⭐ 4.7</span><span class="heat">热度 6,930</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-keywords="Zeta 引擎 集群 部署 资源">
+          <div class="card-img">
+            <img src="https://picsum.photos/seed/seatunnel-zeta52/400/300" width="400" height="300" loading="lazy" alt="Zeta 引擎三节点集群部署架构图">
+            <span class="card-badge">Engine</span>
+          </div>
+          <div class="card-body">
+            <div class="card-title"><a href="/#guide">Zeta 引擎三节点部署</a></div>
+            <div class="card-desc">给出 8C16G 三节点集群的最小可用配置，含 Master 与 Worker 混合部署方式、JVM 堆参数与任务槽位规划，适合首次搭建同步平台。</div>
+            <div class="tag-row"><span class="tag">Zeta</span><span class="tag">集群部署</span><span class="tag">资源规划</span></div>
+            <div class="card-foot"><span>⭐ 4.5</span><span class="heat">热度 5,720</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-keywords="SQL Server 连接器 增量 时间戳">
+          <div class="card-img">
+            <img src="https://picsum.photos/seed/seatunnel-sqlserver14/400/300" width="400" height="300" loading="lazy" alt="SQL Server 连接器增量同步配置界面">
+            <span class="card-badge">Source</span>
+          </div>
+          <div class="card-body">
+            <div class="card-title"><a href="/#categories">SQL Server 增量同步</a></div>
+            <div class="card-desc">通过时间戳列或自增主键做增量拉取，社区补充了分页参数与并发切分的写法，避免大表全量阶段把源库连接打满。</div>
+            <div class="tag-row"><span class="tag">增量同步</span><span class="tag">分页切分</span><span class="tag">关系型库</span></div>
+            <div class="card-foot"><span>⭐ 4.4</span><span class="heat">热度 4,980</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-keywords="HTTP 源 接口 鉴权 分页">
+          <div class="card-img">
+            <img src="https://picsum.photos/seed/seatunnel-http28/400/300" width="400" height="300" loading="lazy" alt="HTTP 接口数据源鉴权与分页配置说明">
+            <span class="card-badge">Source</span>
+          </div>
+          <div class="card-body">
+            <div class="card-title"><a href="/#categories">HTTP 接口数据源</a></div>
+            <div class="card-desc">支持 Bearer Token、Basic Auth 与自定义 Header，可配置分页游标与限速。适合把开放平台数据接进数仓，文档给出 JSON 嵌套字段的扁平化示例。</div>
+            <div class="tag-row"><span class="tag">接口采集</span><span class="tag">鉴权</span><span class="tag">分页</span></div>
+            <div class="card-foot"><span>⭐ 4.3</span><span class="heat">热度 4,150</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-keywords="任务告警 Prometheus 监控 指标">
+          <div class="card-img">
+            <img src="https://picsum.photos/seed/seatunnel-monitor61/400/300" width="400" height="300" loading="lazy" alt="同步任务监控指标与告警配置面板">
+            <span class="card-badge">Ops</span>
+          </div>
+          <div class="card-body">
+            <div class="card-title"><a href="/#guide">任务监控与告警</a></div>
+            <div class="card-desc">Zeta 引擎暴露任务运行指标，可接入 Prometheus 后按失败率与延迟阈值告警。文档列出常用的 6 个核心指标及推荐阈值区间。</div>
+            <div class="tag-row"><span class="tag">监控</span><span class="tag">Prometheus</span><span class="tag">告警阈值</span></div>
+            <div class="card-foot"><span>⭐ 4.5</span><span class="heat">热度 3,870</span></div>
+          </div>
+        </article>
+      </div>
+      <div class="no-result" id="noResult">没有找到匹配的条目，试试“Doris”“CDC”“Kafka”等关键词。</div>
+    </section>
+
+    <!-- 3. 最新更新 -->
+    <section class="section" id="latest-updates">
+      <div class="section-head">
+        <div>
+          <h2><span class="bar"></span>最新更新与社区动态</h2>
+          <div class="sub">2026 年 11 月 25 日前后 30 天内的条目变化</div>
+        </div>
+      </div>
+      <ul class="feed-list">
+        <li>
+          <span class="feed-time today">今天 09:30</span>
+          <div class="feed-main">
+            <div class="f-title"><a href="/#featured">Apache Doris 连接器升级至 v2.3</a></div>
+            <div class="f-sum">新增两阶段提交写入与攒批参数，写入失败可整体回滚。</div>
+          </div>
+          <span class="feed-tag">Sink</span>
+        </li>
+        <li>
+          <span class="feed-time today">今天 08:10</span>
+          <div class="feed-main">
+            <div class="f-title"><a href="/#featured">StarRocks 批量写入文档补充攒批示例</a></div>
+            <div class="f-sum">给出 8 并发、5 万行每批的实测配置与吞吐数据。</div>
+          </div>
+          <span class="feed-tag">文档</span>
+        </li>
+        <li>
+          <span class="feed-time">昨天 21:10</span>
+          <div class="feed-main">
+            <div class="f-title"><a href="/#timeline">2.3.10 候选版本发布 RC1</a></div>
+            <div class="f-sum">包含 18 个连接器修复与 Zeta 引擎的任务恢复优化。</div>
+          </div>
+          <span class="feed-tag">版本</span>
+        </li>
+        <li>
+          <span class="feed-time">11 月 24 日</span>
+          <div class="feed-main">
+            <div class="f-title"><a href="/#community-news">Iceberg 连接器新增 upsert 支持</a></div>
+            <div class="f-sum">基于主键写入可配置更新策略，需开启对应表属性。</div>
+          </div>
+          <span class="feed-tag">Sink</span>
+        </li>
+        <li>
+          <span class="feed-time">11 月 23 日</span>
+          <div class="feed-main">
+            <div class="f-title"><a href="/#guide">Zeta 集群部署文档重写</a></div>
+            <div class="f-sum">补充三节点最小配置与 JVM 参数建议，替换旧版截图。</div>
+          </div>
+          <span class="feed-tag">运维</span>
+        </li>
+        <li>
+          <span class="feed-time">11 月 21 日</span>
+          <div class="feed-main">
+            <div class="f-title"><a href="/#deep-dive">贡献者指南新增连接器开发模板</a></div>
+            <div class="f-sum">提供 Source 与 Sink 两套骨架代码，含单元测试示例。</div>
+          </div>
+          <span class="feed-tag">贡献</span>
+        </li>
+        <li>
+          <span class="feed-time">11 月 19 日</span>
+          <div class="feed-main">
+            <div class="f-title"><a href="/#community-news">中文讨论区举办第 12 期线上答疑</a></div>
+            <div class="f-sum">主题为 CDC 场景下的位点管理与重复数据排查。</div>
+          </div>
+          <span class="feed-tag">活动</span>
+        </li>
+        <li>
+          <span class="feed-time">11 月 16 日</span>
+          <div class="feed-main">
+            <div class="f-title"><a href="/#featured">Kafka 源连接器修复位点回退问题</a></div>
+            <div class="f-sum">解决 checkpoint 间隔过大时偶发的重复消费。</div>
+          </div>
+          <span class="feed-tag">修复</span>
+        </li>
+        <li>
+          <span class="feed-time">11 月 12 日</span>
+          <div class="feed-main">
+            <div class="f-title"><a href="/#timeline">2.3.9 稳定版本正式发布</a></div>
+            <div class="f-sum">含 132 个 PR 合并，重点在连接器兼容性。</div>
+          </div>
+          <span class="feed-tag">版本</span>
+        </li>
+        <li>
+          <span class="feed-time">11 月 8 日</span>
+          <div class="feed-main">
+            <div class="f-title"><a href="/#categories">HTTP 接口数据源补充分页游标说明</a></div>
+            <div class="f-sum">新增游标分页与 limit/offset 两种模式的配置差异。</div>
+          </div>
+          <span class="feed-tag">Source</span>
+        </li>
+        <li>
+          <span class="feed-time">11 月 3 日</span>
+          <div class="feed-main">
+            <div class="f-title"><a href="/#faq">任务告警指标清单更新至 6 项</a></div>
+            <div class="f-sum">新增任务延迟与失败重试次数两项推荐监控指标。</div>
+          </div>
+          <span class="feed-tag">监控</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 4. 分类入口 -->
+    <section class="section" id="categories">
+      <div class="section-head">
+        <div>
+          <h2><span class="bar"></span>按连接器类型与场景浏览</h2>
+          <div class="sub">8 个常用分类，点击进入对应条目集合</div>
+        </div>
+      </div>
+      <div class="cat-grid">
+        <a class="cat-item" href="/#featured">
+          <span class="c-name">关系型数据库同步</span>
+          <span class="c-desc">MySQL、Oracle、SQL Server、PostgreSQL</span>
+          <span class="c-count">42 个连接器</span>
+        </a>
+        <a class="cat-item" href="/#featured">
+          <span class="c-name">消息队列接入</span>
+          <span class="c-desc">Kafka、Pulsar、RabbitMQ 流式来源</span>
+          <span class="c-count">18 个连接器</span>
+        </a>
+        <a class="cat-item" href="/#featured">
+          <span class="c-name">分析型数据库写入</span>
+          <span class="c-desc">Doris、StarRocks、ClickHouse</span>
+          <span class="c-count">16 个连接器</span>
+        </a>
+        <a class="cat-item" href="/#featured">
+          <span class="c-name">湖仓与数据湖</span>
+          <span class="c-desc">Iceberg、Hudi、Paimon 表格式写入</span>
+          <span class="c-count">12 个连接器</span>
+        </a>
+        <a class="cat-item" href="/#featured">
+          <span class="c-name">文件与对象存储</span>
+          <span class="c-desc">S3、HDFS、FTP、本地文件</span>
+          <span class="c-count">21 个连接器</span>
+        </a>
+        <a class="cat-item" href="/#featured">
+          <span class="c-name">接口与 SaaS 采集</span>
+          <span class="c-desc">HTTP、Elasticsearch、MongoDB</span>
+          <span class="c-count">24 个连接器</span>
+        </a>
+        <a class="cat-item" href="/#deep-dive">
+          <span class="c-name">批流一体与 CDC</span>
+          <span class="c-desc">全量增量一体化、位点管理、容错</span>
+          <span class="c-count">技术专题</span>
+        </a>
+        <a class="cat-item" href="/#guide">
+          <span class="c-name">部署与运维</span>
+          <span class="c-desc">Zeta 集群、资源规划、监控告警</span>
+          <span class="c-count">实践手册</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 5. 深度解析 -->
+    <section class="section deep" id="deep-dive">
+      <div class="section-head">
+        <div>
+          <h2><span class="bar"></span>深度解析：批流一体同步中的引擎与连接器取舍</h2>
+          <div class="sub">从执行引擎、连接器能力到贡献路径的具体判断依据</div>
+        </div>
+      </div>
+
+      <h3>三种执行引擎的适用边界</h3>
+      <p>
+        SeaTunnel社区维护的引擎选项有三个：Zeta、Flink、Spark。选择哪一个，取决于任务形态与团队已有技术栈，而不是单纯比较性能数字。Zeta 是社区自研引擎，自带调度与资源管理，部署时不需要额外引入大数据平台组件，适合任务数量在几十到几百之间、以批同步为主的团队。Flink 引擎在流式任务上优势明显，状态后端成熟、checkpoint 语义完备，适合已经运行 Flink 集群并需要与实时计算共用资源的场景。Spark 引擎则在超大规模离线任务上更稳，尤其是需要与既有 Spark 作业共享队列和资源池时。
+      </p>
+      <table class="compare-table">
+        <thead>
+          <tr><th>维度</th><th>Zeta</th><th>Flink</th><th>Spark</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>部署成本</td><td>低，独立集群即可</td><td>中，需维护 Flink 集群</td><td>中高，需维护 Spark 集群</td></tr>
+          <tr><td>流式容错</td><td>支持 checkpoint 与任务恢复</td><td>状态后端成熟，语义完备</td><td>以微批为主，流式支持有限</td></tr>
+          <tr><td>典型规模</td><td>几十到数百任务</td><td>持续流式、任务常驻</td><td>超大离线批处理</td></tr>
+          <tr><td>运维复杂度</td><td>低</td><td>中高</td><td>中高</td></tr>
+        </tbody>
+      </table>
+      <p>
+        实际迁移时，社区建议先用同一份任务配置在目标引擎上跑通一个中等规模的表，再逐步放量。引擎之间的配置项并不完全等价，尤其是并行度、checkpoint 间隔与失败重试策略这三处，直接照搬容易在切换后出现重复写入或任务频繁重启。
+      </p>
+
+      <h3>连接器能力的三个判断维度</h3>
+      <p>
+        浏览连接器条目时，社区文档通常从三个维度描述能力，这三个维度也决定了任务能不能稳定上线。
+      </p>
+      <ul>
+        <li><strong>读取模式：</strong>是否支持全量、增量、全量加增量一体化启动。关系型数据库来源尤其要看是否基于日志捕获变更，还是只能靠时间戳轮询。</li>
+        <li><strong>写入语义：</strong>是否支持幂等写入、两阶段提交或 upsert。分析型数据库与湖仓存储在这一点上差异明显，写入语义不明确时，任务失败重试很容易产生重复数据。</li>
+        <li><strong>位点与恢复：</strong>读取端是否能把位点保存到 checkpoint 或外部存储，任务中断后能否从断点继续，而不是从头重跑。</li>
+      </ul>
+      <div class="callout">
+        <b>判断顺序建议：</b>先确认读取端能否做增量与断点续传，再确认写入端是否幂等，最后才比较吞吐。顺序反了，往往会在压测通过之后才发现数据重复或回溯成本过高。
+      </div>
+
+      <h3>CDC 场景下的常见坑</h3>
+      <p>
+        CDC 是社区讨论最集中的场景，也是最容易踩坑的地方。几个高频问题值得提前确认：源库是否开启 Binlog 且格式为 ROW；表是否有主键，无主键表在更新与删除事件上如何处理；全量阶段与增量阶段切换时，位点是否被正确记录。社区文档在 MySQL CDC 条目里给出了 GTID 模式的完整配置示例，也说明了无主键表需要开启全量阶段快照读取的限制。
+      </p>
+      <p>
+        另一个容易被忽略的点是并发切分。大表全量读取时，如果切分键选择不当，容易造成数据倾斜，单个并行子任务拖慢整体进度。社区建议优先使用数值型自增主键或时间戳列作为切分键，并在测试环境先观察各子任务的行数分布。
+      </p>
+
+      <h3>从使用者到贡献者的路径</h3>
+      <p>
+        SeaTunnel社区对贡献者的门槛并不高，路径也比较清晰。第一步是提交可复现的 Issue，附上版本号、任务配置片段与关键日志；第二步是从文档修正或小 Bug 修复入手，熟悉代码结构与提交流程；第三步是认领连接器适配任务，社区会在 Issue 中标注适合新贡献者的条目；第四步是参与模块维护，成为对应连接器的长期维护者。贡献者指南里提供了 Source 与 Sink 两套骨架代码与单元测试模板，能显著缩短第一个 PR 的周期。
+      </p>
+      <p>
+        需要提醒的是，连接器适配不只是把接口跑通。社区评审时通常还会关注异常处理是否完整、配置项命名是否与同类连接器一致、是否补充了文档与示例配置。这几点做到位，PR 的合并速度会快很多。
+      </p>
+    </section>
+
+    <!-- 6. 上手路径 -->
+    <section class="section" id="guide">
+      <div class="section-head">
+        <div>
+          <h2><span class="bar"></span>上手路径：从第一个任务到稳定运行</h2>
+          <div class="sub">按顺序推进的四步，适合首次接触数据同步平台的团队</div>
+        </div>
+      </div>
+      <ol class="steps">
+        <li>
+          <div class="s-title">先跑通一条最小链路</div>
+          <div class="s-desc">选 MySQL 到本地文件或 MySQL 到 MySQL，用单表、小数据量验证配置结构与运行命令。这一步的目标是理解任务配置文件里 source、transform、sink 三段的关系，而不是追求性能。</div>
+        </li>
+        <li>
+          <div class="s-title">再确认读取端的增量能力</div>
+          <div class="s-desc">把来源换成需要增量同步的表，确认位点保存位置、全量与增量切换的行为。如果来源是关系型数据库，优先验证基于日志的 CDC 模式，而不是时间戳轮询。</div>
+        </li>
+        <li>
+          <div class="s-title">然后验证写入端的幂等与重试</div>
+          <div class="s-desc">人为中断任务再恢复，观察目标表是否出现重复数据。分析型数据库与湖仓存储在写入语义上差异较大，Doris 与 StarRocks 条目里都有对应的参数说明。</div>
+        </li>
+        <li>
+          <div class="s-title">最后补齐监控与告警</div>
+          <div class="s-desc">接入 Prometheus，按任务失败率与数据延迟设置阈值。社区列出的 6 个核心指标可以作为起点，稳定运行一周后再根据实际波动调整。</div>
+        </li>
+      </ol>
+      <div class="quote-card">
+        <div class="q-text">“我们最早把同步任务全放在 Flink 上，后来把批同步迁到 Zeta，集群资源省了将近一半。迁移的关键不是引擎本身，而是把并行度和 checkpoint 参数重新对了一遍。”</div>
+        <div class="q-who">— 某电商平台数据平台组，2026 年 11 月社区分享</div>
+      </div>
+    </section>
+
+    <!-- 7. FAQ -->
+    <section class="section faq" id="faq">
+      <div class="section-head">
+        <div>
+          <h2><span class="bar"></span>常见问答</h2>
+          <div class="sub">社区讨论区高频问题整理</div>
+        </div>
+      </div>
+      <details>
+        <summary>SeaTunnel 的版本一般多久发布一次？</summary>
+        <div class="faq-a">
+          <p>社区通常保持每 6 到 8 周一个稳定版本的节奏，中间会有 1 到 2 个候选发布版本。2.3.9 于 2026 年 11 月 12 日发布，2.3.10 目前处于 RC 阶段。连接器级别的修复会随稳定版本一起发布，紧急问题会在候选版本中先行验证。</p>
+        </div>
+      </details>
+      <details>
+        <summary>Zeta、Flink、Spark 三种引擎该怎么选？</summary>
+        <div class="faq-a">
+          <p>以批同步为主、团队没有现成大数据平台时优先选 Zeta；需要持续流式处理、已有 Flink 集群时选 Flink；超大规模离线任务且与既有 Spark 资源池共用时选 Spark。三种引擎的任务配置结构接近，但并行度与 checkpoint 参数需要重新调整，不建议直接照搬。</p>
+        </div>
+      </details>
+      <details>
+        <summary>MySQL CDC 同步时遇到无主键表怎么办？</summary>
+        <div class="faq-a">
+          <p>无主键表在更新与删除事件上缺少唯一标识，社区文档给出的方案是开启全量阶段快照读取，并在增量阶段把该表当作只追加数据处理。如果业务上必须支持更新，建议在源端补主键，或在同步链路中增加一个代理主键字段。</p>
+        </div>
+      </details>
+      <details>
+        <summary>任务中断后重新启动，会不会产生重复数据？</summary>
+        <div class="faq-a">
+          <p>取决于写入端是否支持幂等或两阶段提交。Doris 连接器 v2.3 支持两阶段提交，失败可整体回滚；StarRocks 与 Iceberg 需要按主键配置 upsert 策略；普通 JDBC 写入在重试时可能产生重复，需要配合目标表唯一约束或去重逻辑。</p>
+        </div>
+      </details>
+      <details>
+        <summary>第一次接触这个项目，从哪个连接器开始看比较好？</summary>
+        <div class="faq-a">
+          <p>建议从 MySQL 源连接器与本地文件 Sink 的组合开始，配置最短、依赖最少，能完整体验任务定义、运行与日志查看。跑通之后再换成 MySQL CDC 源，理解增量与位点管理，最后再接触分析型数据库写入。</p>
+        </div>
+      </details>
+      <details>
+        <summary>想给社区提交连接器适配，需要准备什么？</summary>
+        <div class="faq-a">
+          <p>需要一套可运行的 Source 或 Sink 实现、对应的配置项定义、单元测试与示例配置文件，以及一份说明文档。社区贡献者指南提供了骨架代码模板。提交前建议先在本地用真实数据源跑通，并在 PR 描述中写清测试环境与验证结果。</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 8. 用户评论 -->
+    <section class="section" id="comments">
+      <div class="section-head">
+        <div>
+          <h2><span class="bar"></span>社区用户怎么说</h2>
+          <div class="sub">来自讨论区与线上答疑的真实反馈节选</div>
+        </div>
+      </div>
+      <div class="comment-grid">
+        <div class="comment"><div class="c-head"><span class="c-avatar">陈</span><span class="c-name">陈默</span><span class="c-time">今天 10:12</span></div><div class="c-body">Doris 连接器升到 v2.3 之后，之前偶发的重复写入没了，两阶段提交确实管用。</div></div>
+        <div class="comment"><div class="c-head"><span class="c-avatar a2">林</span><span class="c-name">林一舟</span><span class="c-time">今天 09:40</span></div><div class="c-body">StarRocks 那个攒批参数文档写得很实在，照着调完吞吐涨了三成左右。</div></div>
+        <div class="comment"><div class="c-head"><span class="c-avatar a3">赵</span><span class="c-name">赵明远</span><span class="c-time">昨天 22:05</span></div><div class="c-body">无主键表的处理方案还是有点绕，希望后面能出个更完整的示例配置。</div></div>
+        <div class="comment"><div class="c-head"><span class="c-avatar a4">周</span><span class="c-name">周雨桐</span><span class="c-time">昨天 20:18</span></div><div class="c-body">Zeta 三节点部署文档重写后清楚多了，之前那版截图对不上版本。</div></div>
+        <div class="comment"><div class="c-head"><span class="c-avatar">吴</span><span class="c-name">吴其琛</span><span class="c-time">昨天 16:30</span></div><div class="c-body">Kafka 源位点回退那个问题我们踩过，升级到 2.3.9 之后没再出现。</div></div>
+        <div class="comment"><div class="c-head"><span class="c-avatar a2">郑</span><span class="c-name">郑书言</span><span class="c-time">11 月 24 日</span></div><div class="c-body">Iceberg 的 upsert 我试了，需要把表属性配对，文档里提了但不够显眼。</div></div>
+        <div class="comment"><div class="c-head"><span class="c-avatar a3">孙</span><span class="c-name">孙浩然</span><span class="c-time">11 月 24 日</span></div><div class="c-body">作为贡献者提了第一个 PR，评审意见很具体，主要指出了异常处理不完整。</div></div>
+        <div class="comment"><div class="c-head"><span class="c-avatar a4">黄</span><span class="c-name">黄文清</span><span class="c-time">11 月 23 日</span></div><div class="c-body">SQL Server 增量同步的分页参数写法和 Oracle 那边不太一样，容易搞混。</div></div>
+        <div class="comment"><div class="c-head"><span class="c-avatar">何</span><span class="c-name">何思远</span><span class="c-time">11 月 23 日</span></div><div class="c-body">监控指标那 6 项挺实用，尤其是任务延迟，比只看失败率更早发现问题。</div></div>
+        <div class="comment"><div class="c-head"><span class="c-avatar a2">马</span><span class="c-name">马晓琳</span><span class="c-time">11 月 22 日</span></div><div class="c-body">HTTP 源的分页游标支持终于补上了，之前只能自己写 transform 处理。</div></div>
+        <div class="comment"><div class="c-head"><span class="c-avatar a3">徐</span><span class="c-name">徐立</span><span class="c-time">11 月 21 日</span></div><div class="c-body">从 Flink 迁到 Zeta 的批任务大概有七十个，整体还算顺，并行度要重设。</div></div>
+        <div class="comment"><div class="c-head"><span class="c-avatar a4">罗</span><span class="c-name">罗嘉宁</span><span class="c-time">11 月 20 日</span></div><div class="c-body">线上答疑第 12 期讲的 CDC 位点管理，回放整理得不错，建议做成常驻文档。</div></div>
+        <div class="comment"><div class="c-head"><span class="c-avatar">高</span><span class="c-name">高远</span><span class="c-time">11 月 19 日</span></div><div class="c-body">连接器数量多是优势，但同类之间参数命名不统一，切换时容易看错。</div></div>
+        <div class="comment"><div class="c-head"><span class="c-avatar a2">谢</span><span class="c-name">谢婉如</span><span class="c-time">11 月 18 日</span></div><div class="c-body">希望湖仓那块再补一些 Paimon 和 Hudi 的对照，现在只有 Iceberg 写得细。</div></div>
+        <div class="comment"><div class="c-head"><span class="c-avatar a3">曾</span><span class="c-name">曾凡</span><span class="c-time">11 月 17 日</span></div><div class="c-body">骨架代码模板省了不少事，第一个连接器 PR 两周就合了。</div></div>
+        <div class="comment"><div class="c-head"><span class="c-avatar a4">邓</span><span class="c-name">邓思齐</span><span class="c-time">11 月 15 日</span></div><div class="c-body">任务恢复这块还有提升空间，大批量任务重启后全量阶段会重跑一段。</div></div>
+      </div>
+    </section>
+
+    <!-- 9. 相关资讯 -->
+    <section class="section" id="community-news">
+      <div class="section-head">
+        <div>
+          <h2><span class="bar"></span>社区资讯</h2>
+          <div class="sub">连接器上线、规则调整与讨论焦点</div>
+        </div>
+      </div>
+      <ul class="news-list">
+        <li>
+          <img src="https://picsum.photos/seed/seatunnel-news-doris01/600/400" width="600" height="400" loading="lazy" alt="Doris 连接器两阶段提交功能发布现场截图">
+          <div class="news-main">
+            <div class="n-title"><a href="/#featured">Doris 连接器 v2.3 发布，两阶段提交写入进入稳定状态</a></div>
+            <div class="n-sum">新增攒批时间与最大批次两个参数，写入失败可整体回滚，适合明细流稳定落库。</div>
+            <div class="n-date">2026-11-25</div>
+          </div>
+        </li>
+        <li>
+          <img src="https://picsum.photos/seed/seatunnel-news-iceberg02/600/400" width="600" height="400" loading="lazy" alt="Iceberg 湖仓 upsert 写入配置界面">
+          <div class="news-main">
+            <div class="n-title"><a href="/#featured">Iceberg 连接器支持基于主键的 upsert 写入</a></div>
+            <div class="n-sum">需配置表属性并指定主键字段，社区同步补充了小文件合并策略说明。</div>
+            <div class="n-date">2026-11-24</div>
+          </div>
+        </li>
+        <li>
+          <img src="https://picsum.photos/seed/seatunnel-news-rc03/600/400" width="600" height="400" loading="lazy" alt="2.3.10 候选版本发布说明页面">
+          <div class="news-main">
+            <div class="n-title"><a href="/#timeline">2.3.10 候选版本 RC1 发布，含 18 个连接器修复</a></div>
+            <div class="n-sum">重点在 Zeta 引擎任务恢复优化与 Kafka 源位点问题修复，预计 12 月上旬转正。</div>
+            <div class="n-date">2026-11-24</div>
+          </div>
+        </li>
+        <li>
+          <img src="https://picsum.photos/seed/seatunnel-news-cdc04/600/400" width="600" height="400" loading="lazy" alt="CDC 位点管理线上答疑活动海报">
+          <div class="news-main">
+            <div class="n-title"><a href="/#faq">第 12 期线上答疑回顾：CDC 位点管理与重复数据排查</a></div>
+            <div class="n-sum">讨论集中在无主键表处理、checkpoint 间隔设置与全量增量切换三个话题。</div>
+            <div class="n-date">2026-11-19</div>
+          </div>
+        </li>
+        <li>
+          <img src="https://picsum.photos/seed/seatunnel-news-contrib05/600/400" width="600" height="400" loading="lazy" alt="连接器开发模板代码结构示意">
+          <div class="news-main">
+            <div class="n-title"><a href="/#deep-dive">贡献者指南新增 Source 与 Sink 骨架代码模板</a></div>
+            <div class="n-sum">模板内含配置项定义、单元测试与示例文件，社区标注了适合新贡献者的条目。</div>
+            <div class="n-date">2026-11-21</div>
+          </div>
+        </li>
+        <li>
+          <img src="https://picsum.photos/seed/seatunnel-news-http06/600/400" width="600" height="400" loading="lazy" alt="HTTP 接口数据源分页配置示例">
+          <div class="news-main">
+            <div class="n-title"><a href="/#categories">HTTP 接口数据源补充游标分页模式</a></div>
+            <div class="n-sum">新增游标分页与 limit/offset 两种模式的配置差异说明，并给出 JSON 嵌套字段扁平化示例。</div>
+            <div class="n-date">2026-11-08</div>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 10. 相关推荐 -->
+    <section class="section" id="reco">
+      <div class="section-head">
+        <div>
+          <h2><span class="bar"></span>相关推荐</h2>
+          <div class="sub">延伸阅读方向与具体条目索引</div>
+        </div>
+      </div>
+      <div class="reco-tags">
+        <a href="/#deep-dive">两阶段提交写入 <span class="cnt">6 篇</span></a>
+        <a href="/#deep-dive">Binlog 位点管理 <span class="cnt">9 篇</span></a>
+        <a href="/#guide">Zeta 集群资源规划 <span class="cnt">4 篇</span></a>
+        <a href="/#featured">StarRocks 攒批参数 <span class="cnt">5 篇</span></a>
+        <a href="/#featured">Iceberg 小文件合并 <span class="cnt">3 篇</span></a>
+        <a href="/#faq">无主键表同步方案 <span class="cnt">7 篇</span></a>
+        <a href="/#guide">Prometheus 指标接入 <span class="cnt">4 篇</span></a>
+        <a href="/#deep-dive">连接器骨架代码 <span class="cnt">2 篇</span></a>
+      </div>
+    </section>
+
+    <!-- 11. 版本时间线 -->
+    <section class="section" id="timeline">
+      <div class="section-head">
+        <div>
+          <h2><span class="bar"></span>近期版本时间线</h2>
+          <div class="sub">从 2.3.7 到 2.3.10 候选版本的关键节点</div>
+        </div>
+      </div>
+      <ul class="timeline">
+        <li class="done">
+          <div class="tl-date">2026-11-25</div>
+          <div class="tl-title">Doris 连接器 v2.3 合入主干</div>
+          <div class="tl-desc">两阶段提交与攒批参数进入主干，随 2.3.10 发布。</div>
+        </li>
+        <li class="done">
+          <div class="tl-date">2026-11-24</div>
+          <div class="tl-title">2.3.10 RC1 候选版本</div>
+          <div class="tl-desc">包含 18 个连接器修复，重点在 Kafka 源与 Zeta 任务恢复。</div>
+        </li>
+        <li class="done">
+          <div class="tl-date">2026-11-12</div>
+          <div class="tl-title">2.3.9 稳定版本发布</div>
+          <div class="tl-desc">合并 132 个 PR，连接器兼容性为主要方向。</div>
+        </li>
+        <li class="done">
+          <div class="tl-date">2026-10-28</div>
+          <div class="tl-title">2.3.9 RC2 候选版本</div>
+          <div class="tl-desc">修复 Iceberg 写入小文件过多与 StarRocks 攒批超时问题。</div>
+        </li>
+        <li class="done">
+          <div class="tl-date">2026-10-09</div>
+          <div class="tl-title">2.3.8 稳定版本发布</div>
+          <div class="tl-desc">新增 HTTP 接口数据源分页支持，补充湖仓写入文档。</div>
+        </li>
+        <li>
+          <div class="tl-date">2026-09-18</div>
+          <div class="tl-title">2.3.7 稳定版本发布</div>
+          <div class="tl-desc">Zeta 引擎任务恢复机制优化，SQL Server 增量同步修复。</div>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <!-- 右：辅助栏 -->
+  <aside class="col-right">
+    <div class="side-card">
+      <h3>本周热榜</h3>
+      <ol class="rank-list">
+        <li><a href="/#featured">MySQL CDC 源连接器<span class="rank-meta">热度 11,680 · 本周讨论 214</span></a></li>
+        <li><a href="/#featured">Apache Doris 连接器 v2.3<span class="rank-meta">热度 9,240 · 本周讨论 186</span></a></li>
+        <li><a href="/#featured">Kafka 源连接器<span class="rank-meta">热度 8,410 · 本周讨论 152</span></a></li>
+        <li><a href="/#featured">StarRocks 批量写入<span class="rank-meta">热度 7,860 · 本周讨论 131</span></a></li>
+        <li><a href="/#featured">Iceberg 湖仓写入<span class="rank-meta">热度 6,930 · 本周讨论 108</span></a></li>
+        <li><a href="/#guide">Zeta 三节点部署<span class="rank-meta">热度 5,720 · 本周讨论 96</span></a></li>
+        <li><a href="/#categories">SQL Server 增量同步<span class="rank-meta">热度 4,980 · 本周讨论 84</span></a></li>
+      </ol>
+    </div>
+    <div class="side-card">
+      <h3>实时更新</h3>
+      <ul class="update-list">
+        <li><span class="u-name">Doris 连接器 v2.3</span><span class="u-time">09:30</span><span class="u-desc">两阶段提交写入上线</span></li>
+        <li><span class="u-name">StarRocks 文档</span><span class="u-time">08:10</span><span class="u-desc">补充攒批实测参数</span></li>
+        <li><span class="u-name">2.3.10 RC1</span><span class="u-time">昨天</span><span class="u-desc">候选版本开放验证</span></li>
+        <li><span class="u-name">Iceberg upsert</span><span class="u-time">11-24</span><span class="u-desc">主键写入支持合入</span></li>
+        <li><span class="u-name">Zeta 部署文档</span><span class="u-time">11-23</span><span class="u-desc">重写三节点配置章节</span></li>
+        <li><span class="u-name">贡献者指南</span><span class="u-time">11-21</span><span class="u-desc">新增骨架代码模板</span></li>
+      </ul>
+    </div>
+    <div class="side-card">
+      <h3>参与贡献</h3>
+      <p style="font-size:12.8px;color:var(--c-ink-soft);line-height:1.75;margin-bottom:10px">从文档修正或小 Bug 修复入手，社区在 Issue 中标注了适合新贡献者的连接器条目。</p>
+      <a class="btn btn-primary btn-sm" href="/#deep-dive" style="width:100%">查看贡献流程</a>
+    </div>
+  </aside>
+
+</div>
+
+<!-- 页尾 -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="f-brand">
+          <svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true">
+            <rect x="1" y="1" width="38" height="38" rx="9" fill="#0f6fb8"/>
+            <path d="M8 13h24M8 20h16M8 27h20" stroke="#bfe0f5" stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="30" cy="20" r="4" fill="#f28c28"/>
+          </svg>
+          <span class="bt-main">SeaTunnel社区</span>
+        </div>
+        <p class="f-desc">面向数据工程师与开源贡献者的中文社区入口，聚焦连接器生态、批流一体同步实践与版本更新。</p>
+      </div>
+      <div>
+        <h4>内容频道</h4>
+        <ul>
+          <li><a href="/#overview">社区概览</a></li>
+          <li><a href="/#featured">精选条目</a></li>
+          <li><a href="/#latest-updates">更新动态</a></li>
+          <li><a href="/#categories">连接器分类</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>技术专题</h4>
+        <ul>
+          <li><a href="/#deep-dive">批流一体解析</a></li>
+          <li><a href="/#guide">上手路径</a></li>
+          <li><a href="/#faq">常见问答</a></li>
+          <li><a href="/#timeline">版本时间线</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>社区</h4>
+        <ul>
+          <li><a href="/#comments">用户评论</a></li>
+          <li><a href="/#community-news">社区资讯</a></li>
+          <li><a href="/#reco">相关推荐</a></li>
+          <li><a href="/#deep-dive">贡献指南</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>数据说明</h4>
+        <p class="f-note">
+          连接器数量、版本号与热度数据为社区条目示例，统计时间截至 2026 年 11 月 25 日。
+          版本发布节奏与连接器能力以官方仓库与文档为准。
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 SeaTunnel社区 · 中文开发者内容站</span>
+      <span>内容整理与示例条目由社区志愿者维护 · 最后更新 2026-11-25</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var input = document.getElementById('siteSearch');
+  var btn = document.getElementById('searchBtn');
+  var grid = document.getElementById('cardGrid');
+  var noResult = document.getElementById('noResult');
+  if(!input || !grid) return;
+  var cards = Array.prototype.slice.call(grid.querySelectorAll('.card'));
+
+  function doSearch(){
+    var q = (input.value || '').trim().toLowerCase();
+    if(!q){
+      cards.forEach(function(c){ c.style.display = ''; });
+      noResult.classList.remove('on');
+      return;
+    }
+    var hit = 0;
+    cards.forEach(function(c){
+      var kw = (c.getAttribute('data-keywords') || '') + ' ' + c.textContent;
+      var match = kw.toLowerCase().indexOf(q) !== -1;
+      c.style.display = match ? '' : 'none';
+      if(match) hit++;
+    });
+    noResult.classList.toggle('on', hit === 0);
+  }
+
+  btn.addEventListener('click', doSearch);
+  input.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); doSearch(); }
+  });
+  input.addEventListener('input', function(){
+    if(input.value.trim() === '') doSearch();
+  });
+})();
+</script>
+</body>
+  </html>
